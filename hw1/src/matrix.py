@@ -5,9 +5,11 @@ import copy
 
 class Matrix2D:
     def __init__(self, data: List):
+        if len(data) == 0:
+            raise ValueError("Error in matrix shape")
         self._shape = (len(data), 1 if type(data[0]) is not list else len(data[0]))
         for i in range(len(data)):
-            if type(data[0]) is not list:
+            if type(data[i]) is not list:
                 data[i] = [data[i]]
             if len(data[i]) != self._shape[1]:
                 raise ValueError("Error in matrix shape")
@@ -20,15 +22,15 @@ class Matrix2D:
 
     def triangular_form(self):
         if self._shape[0] != self._shape[1]:
-            raise ValueError("It's not a square")
+            raise ValueError("It's not a square matrix")
 
         triangular_matrix = copy.deepcopy(self._matrix)
-        count_permutation = 0
+        count_permutations = 0
         for i, _ in enumerate(triangular_matrix):
             if triangular_matrix[i][i] == 0:
                 for j in range(i + 1, self._shape[1]):
                     if triangular_matrix[j][i] != 0:
-                        count_permutation += 1
+                        count_permutations += 1
                         triangular_matrix[i], triangular_matrix[j] = (
                             triangular_matrix[j],
                             triangular_matrix[i],
@@ -37,11 +39,10 @@ class Matrix2D:
                 else:
                     continue
             for down_row in triangular_matrix[i + 1 :]:
+                coef = down_row[i] / triangular_matrix[i][i]
                 for j, _ in enumerate(down_row):
-                    down_row[j] -= (
-                        triangular_matrix[i][j] / triangular_matrix[i][i] * down_row[i]
-                    )
-        return (Matrix2D(triangular_matrix), count_permutation)
+                    down_row[j] -= triangular_matrix[i][j] * coef
+        return (Matrix2D(triangular_matrix), count_permutations)
 
 
 class Vector(Matrix2D):
