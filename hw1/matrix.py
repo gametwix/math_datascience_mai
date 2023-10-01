@@ -1,5 +1,6 @@
 from typing import List
 from pathlib import Path
+import copy
 
 
 class Matrix2D:
@@ -12,8 +13,36 @@ class Matrix2D:
                 raise ValueError("Error in matrix shape")
         self._matrix = data
 
+    def __repr__(self):
+        return (
+            f"Matrix2D(shape=({self._shape[0]}, {self._shape[1]}), data={self._matrix})"
+        )
 
-    
+    def triangular_form(self):
+        if self._shape[0] != self._shape[1]:
+            raise ValueError("It's not a square")
+
+        triangular_matrix = copy.deepcopy(self._matrix)
+        count_permutation = 0
+        for i, _ in enumerate(triangular_matrix):
+            if triangular_matrix[i][i] == 0:
+                for j in range(i + 1, self._shape[1]):
+                    if triangular_matrix[j][i] != 0:
+                        count_permutation += 1
+                        triangular_matrix[i], triangular_matrix[j] = (
+                            triangular_matrix[j],
+                            triangular_matrix[i],
+                        )
+                        break
+                else:
+                    continue
+            for down_row in triangular_matrix[i + 1 :]:
+                for j, _ in enumerate(down_row):
+                    down_row[j] -= (
+                        triangular_matrix[i][j] / triangular_matrix[i][i] * down_row[i]
+                    )
+        return (Matrix2D(triangular_matrix), count_permutation)
+
 
 class Vector(Matrix2D):
     def __init__(self, data: List):
@@ -34,14 +63,13 @@ if __name__ == "__main__":
                 matrix = Matrix2D(elems[0])
                 if len(elems) == 2:
                     vector = Vector(elems[1])
-                    # do something
+                    print(matrix.triangular_form())
                 else:
-                    pass
-                    # do something
+                    print(matrix.triangular_form())
                 elems = []
             else:
-                data_str = line.split('(')[1].split(')')[0]
-                input_data = data_str.split(';')
+                data_str = line.split("(")[1].split(")")[0]
+                input_data = data_str.split(";")
                 for i in range(len(input_data)):
                     input_data[i] = input_data[i].split()
                     input_data[i] = list(map(int, input_data[i]))
