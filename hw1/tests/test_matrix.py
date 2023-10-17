@@ -70,7 +70,7 @@ def test_triangular_form_raise(matrix_1x3, matrix_3x1, matrix_3x2):
 def test_triangular_form(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
     matrix = Matrix2D(matrix1_3x3)
     triangular = matrix.triangular_form()
-    assert triangular[1] == 0
+    assert len(triangular[1]) == 0
     assert triangular[0]._shape == (3, 3)
     answer = [[2, 5, 7], [0, -12, -17], [0, 0, 0.0417]]
     for row1, row2 in zip(answer, triangular[0]._matrix):
@@ -79,7 +79,7 @@ def test_triangular_form(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
 
     matrix = Matrix2D(matrix2_3x3)
     triangular = matrix.triangular_form()
-    assert triangular[1] == 0
+    assert len(triangular[1]) == 0
     assert triangular[0]._shape == (3, 3)
     answer = [[2, 3, -1], [0, -3.5, 1.5], [0, 0, 1.8571]]
     for row1, row2 in zip(answer, triangular[0]._matrix):
@@ -88,7 +88,7 @@ def test_triangular_form(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
 
     matrix = Matrix2D(matrix_2x2)
     triangular = matrix.triangular_form()
-    assert triangular[1] == 0
+    assert len(triangular[1]) == 0
     assert triangular[0]._shape == (2, 2)
     answer = [[2, -1], [0, -1.5]]
     for row1, row2 in zip(answer, triangular[0]._matrix):
@@ -97,9 +97,41 @@ def test_triangular_form(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
 
     matrix = Matrix2D(matrix_3x3_zero)
     triangular = matrix.triangular_form()
-    assert triangular[1] == 1
+    assert len(triangular[1]) == 1
     assert triangular[0]._shape == (3, 3)
     answer = [[1, -2, 1], [0, 3, -1], [0, 0, 1.6667]]
     for row1, row2 in zip(answer, triangular[0]._matrix):
         for elem1, elem2 in zip(row1, row2):
             assert round(elem1, 4) == round(elem2, 4)
+
+
+def test_determinant_raise(matrix_1x3, matrix_3x1, matrix_3x2):
+    with pytest.raises(ValueError) as value:
+        matrix = Matrix2D(matrix_1x3)
+        matrix.determinant()
+        assert value == "It's not a square matrix"
+    with pytest.raises(ValueError) as value:
+        matrix = Matrix2D(matrix_3x1)
+        matrix.determinant()
+        assert value == "It's not a square matrix"
+    with pytest.raises(ValueError) as value:
+        matrix = Matrix2D(matrix_3x2)
+        matrix.determinant()
+        assert value == "It's not a square matrix"
+
+def test_determinant(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
+    matrix = Matrix2D(matrix1_3x3)
+    determinant = matrix.determinant()
+    assert round(determinant, 4) == -1
+
+    matrix = Matrix2D(matrix2_3x3)
+    determinant = matrix.determinant()
+    assert round(determinant, 4) == -13
+
+    matrix = Matrix2D(matrix_2x2)
+    determinant = matrix.determinant()
+    assert round(determinant, 4) == -3
+
+    matrix = Matrix2D(matrix_3x3_zero)
+    determinant = matrix.determinant()
+    assert round(determinant, 4) == -5
