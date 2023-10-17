@@ -56,6 +56,21 @@ class Matrix2D:
             result *= row[i]
         return result*(-1)**len(triangular_matrix[1])
     
+    def gaus_method(self, right):
+        pass
+
+    def inverse_matrix(self):
+        pass
+
+    def rank(self):
+        pass
+
+    def has_solution(self):
+        pass
+
+    def solve_equations(self, vector)
+        pass
+
 
 class Vector(Matrix2D):
     def __init__(self, data: List):
