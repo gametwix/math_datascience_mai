@@ -34,3 +34,18 @@ def matrix_3x1():
 @pytest.fixture
 def matrix_3x2():
     return [[2, -1], [1, -2], [1, 2]]
+
+
+@pytest.fixture
+def matrix_3x4():
+    return [[1, 0, 2, 3], [0, 0, 0, 0], [4, 5, 6, 7]]
+
+
+@pytest.fixture
+def matrix_4x4():
+    return [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
+
+
+@pytest.fixture
+def matrix_5x3():
+    return [[1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, 0], [0, 0, 0]]

@@ -26,9 +26,9 @@ class Matrix2D:
     def row_echelon_form(self):
         row_echelon_matrix = copy.deepcopy(self._matrix)
         permutations = []
-        for i, _ in enumerate(row_echelon_matrix):
+        for i in range(min(self._shape)):
             if row_echelon_matrix[i][i] == 0:
-                for j in range(i + 1, self._shape[1]):
+                for j in range(i + 1, self._shape[0]):
                     if row_echelon_matrix[j][i] != 0:
                         permutations.append((i,j))
                         row_echelon_matrix[i], row_echelon_matrix[j] = (
@@ -63,12 +63,18 @@ class Matrix2D:
         pass
 
     def rank(self):
-        pass
+        result = 0
+        for row in self.row_echelon_form()[0]:
+            for element in row:
+                if element != 0:
+                    result += 1
+                    break
+        return result
 
     def has_solution(self):
         pass
 
-    def solve_equations(self, vector)
+    def solve_equations(self, vector):
         pass
 
 

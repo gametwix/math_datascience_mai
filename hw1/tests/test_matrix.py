@@ -8,6 +8,9 @@ from .fixtures import (
     matrix_3x1,
     matrix_3x2,
     matrix_3x3_zero,
+    matrix_3x4,
+    matrix_4x4,
+    matrix_5x3,
 )
 
 
@@ -119,6 +122,7 @@ def test_determinant_raise(matrix_1x3, matrix_3x1, matrix_3x2):
         matrix.determinant()
         assert value == "It's not a square matrix"
 
+
 def test_determinant(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
     matrix = Matrix2D(matrix1_3x3)
     determinant = matrix.determinant()
@@ -135,3 +139,46 @@ def test_determinant(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
     matrix = Matrix2D(matrix_3x3_zero)
     determinant = matrix.determinant()
     assert round(determinant, 4) == -5
+
+
+def test_rank(
+    matrix1_3x3,
+    matrix2_3x3,
+    matrix_1x3,
+    matrix_2x2,
+    matrix_3x1,
+    matrix_3x2,
+    matrix_3x3_zero,
+    matrix_3x4,
+    matrix_4x4,
+    matrix_5x3,
+):
+    matrix = Matrix2D(matrix1_3x3)
+    assert matrix.rank() == 3
+
+    matrix = Matrix2D(matrix2_3x3)
+    assert matrix.rank() == 3
+
+    matrix = Matrix2D(matrix_1x3)
+    assert matrix.rank() ==  1
+
+    matrix = Matrix2D(matrix_2x2)
+    assert matrix.rank() == 2
+
+    matrix = Matrix2D(matrix_3x1)
+    assert matrix.rank() == 1
+
+    matrix = Matrix2D(matrix_3x2)
+    assert matrix.rank() == 2
+
+    matrix = Matrix2D(matrix_3x3_zero)
+    assert matrix.rank() == 3
+
+    matrix = Matrix2D(matrix_3x4)
+    assert matrix.rank() == 2
+
+    matrix = Matrix2D(matrix_4x4)
+    assert matrix.rank() == 2
+
+    matrix = Matrix2D(matrix_5x3)
+    assert matrix.rank() == 3
