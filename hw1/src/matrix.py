@@ -71,8 +71,13 @@ class Matrix2D:
                     break
         return result
 
-    def has_solution(self):
-        pass
+    def has_solution(self, vector):
+        if len(vector) != self._shape[0]:
+            raise ValueError("Different shape matrix and vector")
+        wide_matrix = copy.deepcopy(self._matrix)
+        for row, elem in zip(wide_matrix, vector):
+            row.append(elem)
+        return self.rank() == Matrix2D(wide_matrix).rank()
 
     def solve_equations(self, vector):
         pass

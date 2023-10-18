@@ -1,18 +1,6 @@
 import pytest
-from ..src.matrix import Matrix2D
-from .fixtures import (
-    matrix1_3x3,
-    matrix2_3x3,
-    matrix_1x3,
-    matrix_2x2,
-    matrix_3x1,
-    matrix_3x2,
-    matrix_3x3_zero,
-    matrix_3x4,
-    matrix_4x4,
-    matrix_5x3,
-)
-
+from ..src.matrix import Matrix2D, Vector
+from .fixtures import *
 
 def test_create_bad_shape():
     with pytest.raises(ValueError) as value:
@@ -182,3 +170,64 @@ def test_rank(
 
     matrix = Matrix2D(matrix_5x3)
     assert matrix.rank() == 3
+
+def test_rank(
+    matrix1_3x3,
+    matrix2_3x3,
+    matrix_1x3,
+    matrix_2x2,
+    matrix_3x1,
+    matrix_3x2,
+    matrix_3x3_zero,
+    matrix_3x4,
+    matrix_4x4,
+    matrix_5x3,
+    vec_mat1,
+    vec_mat2,
+    vec_mat_3x3_zero,
+    vec_mat_2x2,
+    vec_mat_1x3,
+    vec_mat_3x1,
+    vec_mat_3x2,
+    vec_mat_3x4,
+    vec_mat_4x4,
+    vec_mat_5x3
+):
+    matrix = Matrix2D(matrix1_3x3)
+    vec = Vector(vec_mat1)
+    assert matrix.has_solution(vec) == True
+
+    matrix = Matrix2D(matrix2_3x3)
+    vec = Vector(vec_mat2)
+    assert matrix.has_solution(vec) == True
+    
+    matrix = Matrix2D(matrix_1x3)
+    vec = Vector(vec_mat_1x3)
+    assert matrix.has_solution(vec) == True
+
+    matrix = Matrix2D(matrix_2x2)
+    vec = Vector(vec_mat_2x2)
+    assert matrix.has_solution(vec) == True
+
+    matrix = Matrix2D(matrix_3x1)
+    vec = Vector(vec_mat_3x1)
+    assert matrix.has_solution(vec) == False
+
+    matrix = Matrix2D(matrix_3x2)
+    vec = Vector(vec_mat_3x2)
+    assert matrix.has_solution(vec) == False
+
+    matrix = Matrix2D(matrix_3x3_zero)
+    vec = Vector(vec_mat_3x3_zero)
+    assert matrix.has_solution(vec) == True
+
+    matrix = Matrix2D(matrix_3x4)
+    vec = Vector(vec_mat_3x4)
+    assert matrix.has_solution(vec) == True
+    matrix = Matrix2D(matrix_4x4)
+    vec = Vector(vec_mat_4x4)
+    assert matrix.has_solution(vec) == True
+
+    matrix = Matrix2D(matrix_5x3)
+    vec = Vector(vec_mat_5x3)
+    assert matrix.has_solution(vec) == False
