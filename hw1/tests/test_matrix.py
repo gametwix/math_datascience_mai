@@ -1,6 +1,7 @@
 import pytest
-from ..src.matrix import Matrix2D, Vector
+from ..src.matrix import Matrix2D, Matrix2D
 from .fixtures import *
+import copy
 
 def test_create_bad_shape():
     with pytest.raises(ValueError) as value:
@@ -194,40 +195,119 @@ def test_rank(
     vec_mat_5x3
 ):
     matrix = Matrix2D(matrix1_3x3)
-    vec = Vector(vec_mat1)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat1)
+    assert matrix.has_solution(vec_mat1) == True
 
     matrix = Matrix2D(matrix2_3x3)
-    vec = Vector(vec_mat2)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat2)
+    assert matrix.has_solution(vec_mat2) == True
     
     matrix = Matrix2D(matrix_1x3)
-    vec = Vector(vec_mat_1x3)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat_1x3)
+    assert matrix.has_solution(vec_mat_1x3) == True
 
     matrix = Matrix2D(matrix_2x2)
-    vec = Vector(vec_mat_2x2)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat_2x2)
+    assert matrix.has_solution(vec_mat_2x2) == True
 
     matrix = Matrix2D(matrix_3x1)
-    vec = Vector(vec_mat_3x1)
-    assert matrix.has_solution(vec) == False
+    vec = Matrix2D(vec_mat_3x1)
+    assert matrix.has_solution(vec_mat_3x1) == False
 
     matrix = Matrix2D(matrix_3x2)
-    vec = Vector(vec_mat_3x2)
-    assert matrix.has_solution(vec) == False
+    vec = Matrix2D(vec_mat_3x2)
+    assert matrix.has_solution(vec_mat_3x2) == False
 
     matrix = Matrix2D(matrix_3x3_zero)
-    vec = Vector(vec_mat_3x3_zero)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat_3x3_zero)
+    assert matrix.has_solution(vec_mat_3x3_zero) == True
 
     matrix = Matrix2D(matrix_3x4)
-    vec = Vector(vec_mat_3x4)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat_3x4)
+    assert matrix.has_solution(vec_mat_3x4) == True
     matrix = Matrix2D(matrix_4x4)
-    vec = Vector(vec_mat_4x4)
-    assert matrix.has_solution(vec) == True
+    vec = Matrix2D(vec_mat_4x4)
+    assert matrix.has_solution(vec_mat_4x4) == True
 
     matrix = Matrix2D(matrix_5x3)
-    vec = Vector(vec_mat_5x3)
-    assert matrix.has_solution(vec) == False
+    vec = Matrix2D(vec_mat_5x3)
+    assert matrix.has_solution(vec_mat_5x3) == False
+
+
+def test_inverse(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
+    matrix = Matrix2D(matrix1_3x3)
+    inverse_matrix = matrix.inverse_matrix()
+    identity_matrix = copy.deepcopy(matrix)
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            identity_matrix[i][j] = 0
+            for k in range(matrix._shape[0]):
+                identity_matrix[i][j] += matrix[i][k]*inverse_matrix[k][j]
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            if i == j:
+                assert round(identity_matrix[i][j]) == 1
+            else:
+                 assert round(identity_matrix[i][j]) == 0
+
+    matrix = Matrix2D(matrix2_3x3)
+    inverse_matrix = matrix.inverse_matrix()
+    identity_matrix = copy.deepcopy(matrix)
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            identity_matrix[i][j] = 0
+            for k in range(matrix._shape[0]):
+                identity_matrix[i][j] += matrix[i][k]*inverse_matrix[k][j]
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            if i == j:
+                assert round(identity_matrix[i][j]) == 1
+            else:
+                 assert round(identity_matrix[i][j]) == 0
+
+    matrix = Matrix2D(matrix_2x2)
+    inverse_matrix = matrix.inverse_matrix()
+    identity_matrix = copy.deepcopy(matrix)
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            identity_matrix[i][j] = 0
+            for k in range(matrix._shape[0]):
+                identity_matrix[i][j] += matrix[i][k]*inverse_matrix[k][j]
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            if i == j:
+                assert round(identity_matrix[i][j]) == 1
+            else:
+                 assert round(identity_matrix[i][j]) == 0
+
+    matrix = Matrix2D(matrix_3x3_zero)
+    inverse_matrix = matrix.inverse_matrix()
+    identity_matrix = copy.deepcopy(matrix)
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            identity_matrix[i][j] = 0
+            for k in range(matrix._shape[0]):
+                identity_matrix[i][j] += matrix[i][k]*inverse_matrix[k][j]
+    for i in range(matrix._shape[0]):
+        for j in range(matrix._shape[1]):
+            if i == j:
+                assert round(identity_matrix[i][j]) == 1
+            else:
+                 assert round(identity_matrix[i][j]) == 0
+
+def test_solve(matrix1_3x3, matrix2_3x3, matrix_2x2, matrix_3x3_zero):
+    matrix = Matrix2D(matrix1_3x3)
+    answer = matrix.solve_equations([[6], [3], [3]])
+    assert [round(elem[0], 4) for elem in answer._matrix] == [6, -207, 147]
+
+    matrix = Matrix2D(matrix2_3x3)
+    answer = matrix.solve_equations([[6], [3], [3]])
+    assert [round(elem[0], 4) for elem in answer._matrix] == [3, 0, 0]
+
+    matrix = Matrix2D(matrix_2x2)
+    answer = matrix.solve_equations([[-1], [1]])
+    assert [round(elem[0], 4) for elem in answer._matrix] == [-1, -1]
+
+    matrix = Matrix2D(matrix_3x3_zero)
+    answer = matrix.solve_equations([[1], [2], [1]])
+    assert [round(elem[0], 4) for elem in answer._matrix] == [3, 0, -1]

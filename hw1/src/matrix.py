@@ -30,7 +30,7 @@ class Matrix2D:
             if row_echelon_matrix[i][i] == 0:
                 for j in range(i + 1, self._shape[0]):
                     if row_echelon_matrix[j][i] != 0:
-                        permutations.append((i,j))
+                        permutations.append((i, j))
                         row_echelon_matrix[i], row_echelon_matrix[j] = (
                             row_echelon_matrix[j],
                             row_echelon_matrix[i],
@@ -43,7 +43,7 @@ class Matrix2D:
                 for j, _ in enumerate(down_row):
                     down_row[j] -= row_echelon_matrix[i][j] * coef
         return (Matrix2D(row_echelon_matrix), permutations)
-        
+
     def triangular_form(self):
         if self._shape[0] != self._shape[1]:
             raise ValueError("It's not a square matrix")
@@ -54,13 +54,45 @@ class Matrix2D:
         result = 1
         for i, row in enumerate(triangular_matrix[0]):
             result *= row[i]
-        return result*(-1)**len(triangular_matrix[1])
-    
+        return result * (-1) ** len(triangular_matrix[1])
+
     def gaus_method(self, right):
-        pass
+        new_matrix = copy.deepcopy(self._matrix)
+        for row_mat, row_right in zip(new_matrix, right):
+            row_mat.extend(row_right)
+
+        
+        new_matrix = Matrix2D(new_matrix)
+        
+        echelon_matrix, permutation = new_matrix.row_echelon_form()
+        
+        for i in reversed(range(echelon_matrix._shape[0])):
+            for j in range(self._shape[1]):
+                if echelon_matrix[i][j] != 0:
+                    div_elem = echelon_matrix[i][j]
+                    for k in range(echelon_matrix._shape[1]):
+                        echelon_matrix._matrix[i][k] /= div_elem
+                    for k in reversed(range(i)):
+                        echelon_matrix._matrix[k] = [
+                            echelon_matrix[k][l]
+                            - echelon_matrix[i][l]
+                            * echelon_matrix[k][j]
+                            for l in range(new_matrix._shape[1])
+                        ]
+                    
+                    break
+        return (echelon_matrix, permutation)
 
     def inverse_matrix(self):
-        pass
+        if self.determinant == 0:
+            return None
+        gaus_res, _ = self.gaus_method(
+            [[1 if i == j else 0 for j in range(self._shape[1])] for i in range(self._shape[0])]
+        )
+
+        inverse_matrix = [row[self._shape[0]:] for row in gaus_res]
+
+        return Matrix2D(inverse_matrix)
 
     def rank(self):
         result = 0
@@ -76,28 +108,12 @@ class Matrix2D:
             raise ValueError("Different shape matrix and vector")
         wide_matrix = copy.deepcopy(self._matrix)
         for row, elem in zip(wide_matrix, vector):
-            row.append(elem)
+            row.extend(elem)
         return self.rank() == Matrix2D(wide_matrix).rank()
 
     def solve_equations(self, vector):
-        pass
-
-
-class Vector(Matrix2D):
-    def __init__(self, data: List):
-        super().__init__(data)
-        if self._shape[0] != 1 and self._shape[1] != 1:
-            raise ValueError("This matrix can't to be vector")
-
-    def __getitem__(self, key):
-        if self._shape[0] == 1:
-            return self._matrix[0][key]
-        else:
-            return self._matrix[key][0]
-    
-    def __len__(self):
-        if self._shape[0] == 1:
-            return self._shape[1]
-        else:
-            return self._shape[0]
-
+        if not self.has_solution(vector):
+            return None
+        gaus_res, _ = self.gaus_method(vector)
+        solve_matrix = [row[self._shape[0]:] for row in gaus_res]
+        return Matrix2D(solve_matrix)

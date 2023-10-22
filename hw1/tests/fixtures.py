@@ -53,19 +53,19 @@ def matrix_5x3():
 
 @pytest.fixture
 def vec_mat1():
-    return [[1, 2, 3]]
+    return [[1], [2], [3]]
 
 @pytest.fixture
 def vec_mat2():
-    return [[3, -1, 4]]
+    return [[3], [-1], [4]]
 
 @pytest.fixture
 def vec_mat_3x3_zero():
-    return [[2, 0, 1]]
+    return [[2], [0], [1]]
 
 @pytest.fixture
 def vec_mat_2x2():
-    return [[2, 1]]
+    return [[2], [1]]
 
 @pytest.fixture
 def vec_mat_1x3():
@@ -73,20 +73,20 @@ def vec_mat_1x3():
 
 @pytest.fixture
 def vec_mat_3x1():
-    return [[1, -2, 3]]
+    return [[1], [-2],[3]]
 
 @pytest.fixture
 def vec_mat_3x2():
-    return [[1, 2, -1]]
+    return [[1], [2], [-1]]
 
 @pytest.fixture
 def vec_mat_3x4():
-    return [[0, 0, 0]]
+    return [[0], [0], [0]]
 
 @pytest.fixture
 def vec_mat_4x4():
-    return [[2, 3, 4, 5]]
+    return [[2], [3], [4], [5]]
 
 @pytest.fixture
 def vec_mat_5x3():
-    return [[0, 1, 0, 1, 0]]
+    return [[0], [1], [0], [1], [0]]
