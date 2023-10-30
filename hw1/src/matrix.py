@@ -19,6 +19,23 @@ class Matrix2D:
         return (
             f"Matrix2D(shape=({self._shape[0]}, {self._shape[1]}), data={self._matrix})"
         )
+    
+    def __str__(self) -> str:
+        output = '('
+        for i, row in enumerate(self._matrix):
+            if isinstance(row, list):
+                for j, elem in enumerate(row):
+                    if j != 0:
+                        output += ', '
+                    output += f'{round(elem, 3)}'
+                if i != self._shape[0] - 1:
+                    output += '; '
+            else:
+                if i != 0:
+                    output += ', '
+                output += f'{round(row, 3)}'
+        output += ')'
+        return output
 
     def __getitem__(self, key):
         return self._matrix[key]
